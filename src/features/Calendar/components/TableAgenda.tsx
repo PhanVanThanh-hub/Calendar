@@ -10,9 +10,7 @@ import {
     Td,
   } from '@chakra-ui/react';
 
-export interface calendarAge{
-    list:[]
-}
+ 
 
 export default function  TableAgenda(){
     const calendarAge =[
