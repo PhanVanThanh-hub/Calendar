@@ -3,27 +3,31 @@ import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
-    TableCaption,
   } from '@chakra-ui/react';
 import moment from 'moment';
+
+
+import { useAppSelector } from '../../../../app/hooks';
+
+import {MonthChoose} from '../../CalendarSlice';
+
 export default function TableMonth(){
-    const day1 =["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
-    
-    const value = moment();
+
+    const month = useAppSelector(MonthChoose);
+
+
+    const day1 =["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] 
+
+    const value = moment().add(month, 'M');
     const startDay = value.clone().startOf("month").startOf("week");
     const endDay = value.clone().endOf("month").endOf("week");
     const day = startDay.clone().subtract(1,"day");
 
-    console.log("startDay:",startDay)
-    console.log("endDay:",endDay)
-    console.log("day:",day)
-
+    //Tao lich trong thang
     const calendar =[]
-
     while(day.isBefore(endDay,"day")){
         calendar.push(
             Array(7)
@@ -31,10 +35,13 @@ export default function TableMonth(){
                 .map(()=>day.add(1,"day").clone())
         )
     }
-    console.log("calendar:",calendar)
+
+
+    
+
     return(
-        <Table variant='simple'>
-            <TableCaption>Imperial to metric conversion factors</TableCaption>
+        <Table variant='simple' >
+            
             <Thead>
                 <Tr>
                 {
@@ -45,15 +52,21 @@ export default function TableMonth(){
                 </Tr>
             </Thead>
             <Tbody>
-                {calendar.map((week)=>(
-                    <Tr >
-                        {week.map((day)=>(
-                            <Td sx={{ border: "1px solid #ddd",textAlign:"center"}}>
+                {calendar.map((week,index)=>(
+                    <Tr key={index} >
+                        {week.map((day,indexWeek)=>{
+                            var monthNow =  value.format('MMMM');
+
+                            var monthDay =  day.format('MMMM');
+                           
+                           
+                            return(
+                            <Td key={indexWeek} sx={{ border: "1px solid #ddd",textAlign:"center"}}>
                                  
-                                <div style={{position: "relative",minHeight: "100%"}}>
+                                <div style={{position: "relative",minHeight: "100%",opacity: monthDay===monthNow ? "1": "0.3"}}>
                                     <div>
                                         <a style={{textAlign: "center",marginTop: "12px",marginBottom: "12px",
-                                                position: "relative",zIndex: "4",padding: "4px"    
+                                                position: "relative",zIndex: "4",padding: "4px"     
                                             }}
                                         >
                                             {day.format("D").toString()}
@@ -66,8 +79,8 @@ export default function TableMonth(){
                                     </div>
                                 </div>
                             </Td>
-
-                        ))}
+                            )
+                        })}
                     </Tr>
                 ))} 
                 

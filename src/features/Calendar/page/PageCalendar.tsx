@@ -1,44 +1,52 @@
 import React from 'react';
  
 import { Box } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
+ 
 import moment from 'moment';
 
-import TableMonth from '../components/TableMonth';
-import TableWeek from '../components/TableWeek';
-import TableAgenda from '../components/TableAgenda';
+import TodayButton from '../components/Header/Today';
+import ChooseTime from '../components/Header/ChooseTime';
+import ChooseTable from '../components/Header/ChooseTable';
+
+import TableMonth from '../components/Table/TableMonth';
+import TableWeek from '../components/Table/TableWeek';
+import TableAgenda from '../components/Table/TableAgenda';
+
+import { useAppSelector } from '../../../app/hooks';
+import {TableChoose} from '../CalendarSlice';
+
 export default function CalendarPage(){
-    const value = moment();
-    const startDay = value.clone().startOf("month").startOf("week");
-    const endDay = value.clone().endOf("month").endOf("week");
-    const day = startDay.clone().subtract(1,"day");
+    
+    const table = useAppSelector(TableChoose);
 
-    console.log("startDay:",startDay)
-    console.log("endDay:",endDay)
-    console.log("day:",day)
+    console.log("table:",table)
 
-    const calendar =[]
-
-    while(day.isBefore(endDay,"day")){
-        calendar.push(
-            Array(7)
-                .fill(0)
-                .map(()=>day.add(1,"day").clone())
-        )
-    }
-
-    console.log("calendar:",calendar)
     return(
-        <Box sx={{padding:"20px"}}>
-            {/* <TableMonth/> */}
-            <TableAgenda/>
-            {/* <TableWeek/> */}
-            {/* {calendar.map((week)=>(
-                <div>
-                    {week.map((day)=>(
-                        <div>{day.format("D").toString()}</div>
-                    ))}
-                </div>
-            ))}          */}
-        </Box>
+        <>
+            <Box sx={{margin:"20px"}}> 
+                <Grid templateColumns='repeat(3, 1fr)' sx={{alignItems: "center",justifyContent: "space-between",display: "flex",}}>
+                    <GridItem>
+                        <TodayButton/>
+                    </GridItem>
+                    <GridItem>
+                        <ChooseTime/>
+                    </GridItem>
+                    <GridItem>
+                        <ChooseTable/>
+                    </GridItem>
+                </Grid>
+            </Box>
+            <Box sx={{margin:"20px",border:"1px solid red",borderRadius:"12px"}}>
+                <Box sx={{margin:"20px" }}>
+                    {
+                        table===0? <TableMonth/> :
+                        table===1? <TableWeek/>  : <TableAgenda/>
+                    }
+                     
+                </Box>
+                
+            </Box>
+        </>
     )
 }
