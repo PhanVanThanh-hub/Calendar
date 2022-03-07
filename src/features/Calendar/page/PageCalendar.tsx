@@ -2,8 +2,10 @@ import React from 'react';
  
 import { Box } from '@chakra-ui/react';
 import moment from 'moment';
+
 import TableMonth from '../components/TableMonth';
 import TableWeek from '../components/TableWeek';
+import TableAgenda from '../components/TableAgenda';
 export default function CalendarPage(){
     const value = moment();
     const startDay = value.clone().startOf("month").startOf("week");
@@ -27,8 +29,9 @@ export default function CalendarPage(){
     console.log("calendar:",calendar)
     return(
         <Box sx={{padding:"20px"}}>
-            <TableMonth/>
-            <TableWeek/>
+            {/* <TableMonth/> */}
+            <TableAgenda/>
+            {/* <TableWeek/> */}
             {/* {calendar.map((week)=>(
                 <div>
                     {week.map((day)=>(
