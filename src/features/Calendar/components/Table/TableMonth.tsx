@@ -10,23 +10,25 @@ import {
 import moment from 'moment';
 
 
-import { useAppSelector } from '../../../../app/hooks';
+import {useAppDispatch, useAppSelector } from '../../../../app/hooks';
 
-import {MonthChoose} from '../../CalendarSlice';
+import {MonthChoose,CalendarActions} from '../../CalendarSlice';
 
 export default function TableMonth(){
+
+    const dispatch = useAppDispatch();
 
     const month = useAppSelector(MonthChoose);
 
 
     const day1 =["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] 
 
+    //Tao lich trong thang
     const value = moment().add(month, 'M');
     const startDay = value.clone().startOf("month").startOf("week");
     const endDay = value.clone().endOf("month").endOf("week");
     const day = startDay.clone().subtract(1,"day");
 
-    //Tao lich trong thang
     const calendar =[]
     while(day.isBefore(endDay,"day")){
         calendar.push(
@@ -36,7 +38,11 @@ export default function TableMonth(){
         )
     }
 
-
+    //Function
+    const onClickDate=({dayChoose}:any)=>{
+        dispatch(CalendarActions.statusAddEvent(true))
+        dispatch(CalendarActions.dayAddEvent(dayChoose))
+    }
     
 
     return(
@@ -59,9 +65,10 @@ export default function TableMonth(){
 
                             var monthDay =  day.format('MMMM');
                            
-                           
+                            const dayChoose = day.format("MMM-DD")
+                          
                             return(
-                            <Td key={indexWeek} sx={{ border: "1px solid #ddd",textAlign:"center"}}>
+                            <Td key={indexWeek} sx={{ border: "1px solid #ddd",textAlign:"center"}} onClick={()=>onClickDate({dayChoose})}>
                                  
                                 <div style={{position: "relative",minHeight: "100%",opacity: monthDay===monthNow ? "1": "0.3"}}>
                                     <div>

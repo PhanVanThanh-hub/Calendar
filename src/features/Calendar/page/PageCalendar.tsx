@@ -2,8 +2,10 @@ import React from 'react';
  
 import { Box } from '@chakra-ui/react';
 import { Grid, GridItem } from '@chakra-ui/react';
- 
-import moment from 'moment';
+import {
+    Modal,
+    
+} from '@chakra-ui/react';
 
 import TodayButton from '../components/Header/Today';
 import ChooseTime from '../components/Header/ChooseTime';
@@ -13,14 +15,23 @@ import TableMonth from '../components/Table/TableMonth';
 import TableWeek from '../components/Table/TableWeek';
 import TableAgenda from '../components/Table/TableAgenda';
 
-import { useAppSelector } from '../../../app/hooks';
-import {TableChoose} from '../CalendarSlice';
+import ModalAddEvent from '../components/ModalAddEvent';
 
+import { useAppSelector,useAppDispatch } from '../../../app/hooks';
+import {TableChoose,AddEvent,CalendarActions} from '../CalendarSlice';
+ 
 export default function CalendarPage(){
     
-    const table = useAppSelector(TableChoose);
+    const dispatch = useAppDispatch();
 
-    console.log("table:",table)
+    //
+    const table = useAppSelector(TableChoose);
+    const open = useAppSelector(AddEvent)
+
+    //
+    const closeAddEvent =():void=>{
+        dispatch(CalendarActions.statusAddEvent(false))
+    }
 
     return(
         <>
@@ -47,6 +58,11 @@ export default function CalendarPage(){
                 </Box>
                 
             </Box>
+            <Modal isOpen={open} onClose={closeAddEvent}>
+                
+                <ModalAddEvent closeAddEvent={closeAddEvent}/>
+            </Modal>
+       
         </>
     )
 }

@@ -3,7 +3,6 @@ import { Box } from '@chakra-ui/react';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import {
     Table,
-    Thead,
     Tbody,
     Tr,
     Th,
