@@ -10,26 +10,28 @@ import {
  
 import moment from 'moment';
 
-import {Event} from '../../../../models/Event'; 
+import {Event,Day,Month} from '../../../../models/Event'; 
 
-import {useAppDispatch, useAppSelector } from '../../../../app/hooks';
+import {useAppDispatch } from '../../../../app/hooks';
 
-import {MonthChoose,CalendarActions,DayEvent,ListDayEvent,ListMonthEvent} from '../../CalendarSlice';
+import {CalendarActions} from '../../CalendarSlice';
 
 interface EventProps{
     list:Event[]
 }
 
-export default function TableMonth(){
+interface TableMonthProps{
+    month:number,
+    event:Event[],
+    dayEvent:Day[],
+    monthEvent:Month[]
+
+}
+
+export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthProps){
 
     const dispatch = useAppDispatch();
  
-
-    //
-    const month = useAppSelector(MonthChoose);
-    const event = useAppSelector(DayEvent);
-    const dayEvent = useAppSelector(ListDayEvent);
-    const monthEvent = useAppSelector(ListMonthEvent);
 
     const day1 =["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] 
 

@@ -20,7 +20,7 @@ import ModalPreviewEvent from '../components/Modal/ModalPreview';
 
 import { useAppSelector,useAppDispatch } from '../../../app/hooks';
 import {TableChoose,AddEvent,CalendarActions,StatusPreview,EventPreview} from '../CalendarSlice';
- 
+import {MonthChoose,DayEvent,ListDayEvent,ListMonthEvent} from '../CalendarSlice';
 export default function CalendarPage(){
     
     const dispatch = useAppDispatch();
@@ -30,6 +30,11 @@ export default function CalendarPage(){
     const open = useAppSelector(AddEvent);
     const openPreview = useAppSelector(StatusPreview);
     const eventPreview = useAppSelector(EventPreview);
+
+    const month = useAppSelector(MonthChoose);
+    const event = useAppSelector(DayEvent);
+    const dayEvent = useAppSelector(ListDayEvent);
+    const monthEvent = useAppSelector(ListMonthEvent);
 
     //
     const closeAddEvent =():void=>{
@@ -60,8 +65,8 @@ export default function CalendarPage(){
             <Box sx={{margin:"20px",border:"1px solid red",borderRadius:"12px"}}>
                 <Box sx={{margin:"20px" }}>
                     {
-                        table===0? <TableMonth/> :
-                        table===1? <TableWeek/>  : <TableAgenda/>
+                        table===0? <TableMonth month={month} event={event} dayEvent={dayEvent} monthEvent={monthEvent}/> :
+                        table===1? <TableWeek/>  : <TableAgenda month={month} event={event} dayEvent={dayEvent} monthEvent={monthEvent}/>
                     }
                      
                 </Box>
