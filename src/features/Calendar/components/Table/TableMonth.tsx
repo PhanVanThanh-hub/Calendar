@@ -12,14 +12,19 @@ import moment from 'moment';
 
 import {useAppDispatch, useAppSelector } from '../../../../app/hooks';
 
-import {MonthChoose,CalendarActions} from '../../CalendarSlice';
+import {MonthChoose,CalendarActions,DayEvent,ListDayEvent,ListMonthEvent} from '../../CalendarSlice';
+
+ 
 
 export default function TableMonth(){
 
     const dispatch = useAppDispatch();
 
+    //
     const month = useAppSelector(MonthChoose);
-
+    const event = useAppSelector(DayEvent);
+    const dayEvent = useAppSelector(ListDayEvent);
+    const monthEvent = useAppSelector(ListMonthEvent);
 
     const day1 =["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] 
 
@@ -28,7 +33,7 @@ export default function TableMonth(){
     const startDay = value.clone().startOf("month").startOf("week");
     const endDay = value.clone().endOf("month").endOf("week");
     const day = startDay.clone().subtract(1,"day");
-
+     
     const calendar =[]
     while(day.isBefore(endDay,"day")){
         calendar.push(
@@ -44,15 +49,58 @@ export default function TableMonth(){
         dispatch(CalendarActions.dayAddEvent(dayChoose))
     }
     
+ 
+    
+    const eventOfMonth =[""]
+    const monthDisplay = value.format('MMMM')
+
+    //lấy object month đang hiển thị
+    const index = monthEvent.findIndex(item=>item.month===monthDisplay)
+    if(index>=0){
+        //Lấy id các ngày có event trong tháng
+        monthEvent[index].id.map((value,index)=>{
+            const index1 = dayEvent.findIndex(item=>item.id===value)
+            if(index1>=0){
+                eventOfMonth.push(...dayEvent[index1].listId)
+            }
+        })
+    }
+ 
+    const eventOfDay = [{
+        background: "",
+        color: "",
+        dayEvent: "",
+        detail: "",
+        endTime: "",
+        startTime: "",
+        title: "",
+    }]
+
+    //Lấy  sự kiện diễn ra trong tháng
+    eventOfMonth.map((value,index)=>{
+        const index2=  event.findIndex(item=>item.id===value)
+        if(index2>=0){
+            eventOfDay.push(event[index2])
+        }
+    })
+     
+    eventOfDay.shift();
+ 
 
     return(
-        <Table variant='simple' >
+        <Table variant='simple' sx={{widthL:"913px"}}>
             
             <Thead>
-                <Tr>
+                <Tr role="row">
                 {
                     day1.map((value,index)=>
-                        <Th sx={{ border: "1px solid #ddd",textAlign:"center",textTransform: "none",fontSize:"1rem"}} key={index}>{value}</Th>
+                        <Th  role="columnheader" sx={{ border: "1px solid #ddd",textAlign:"center",textTransform: "none",fontSize:"1rem"}} key={index}>
+                            <div>
+                                <a style={{color: "rgb(33, 33, 33)",padding: "16px"}}>
+                                    {value}
+                                </a>
+                            </div> 
+                        </Th>
                     )
                 }
                 </Tr>
@@ -65,10 +113,25 @@ export default function TableMonth(){
 
                             var monthDay =  day.format('MMMM');
                            
-                            const dayChoose = day.format("MMM-DD")
-                          
+                            const dayChoose = day.format("MMMM-DD-yyy")
+                            const eventInDay=[{
+                                background: "",
+                                color: "",
+                                dayEvent: "",
+                                detail: "",
+                                endTime: "",
+                                startTime: "",
+                                title: "",
+                            }];
+                            eventOfDay.map((value,index)=>{
+                                if(value.dayEvent===dayChoose){
+                                    eventInDay.push(value)
+                                }
+                            })
+                            
+                            eventInDay.shift();
                             return(
-                            <Td key={indexWeek} sx={{ border: "1px solid #ddd",textAlign:"center"}} onClick={()=>onClickDate({dayChoose})}>
+                            <Td key={indexWeek} sx={{ border: "1px solid #ddd",textAlign:"center",padding:"0px",height:"100px",}} onClick={()=>onClickDate({dayChoose})}>
                                  
                                 <div style={{position: "relative",minHeight: "100%",opacity: monthDay===monthNow ? "1": "0.3"}}>
                                     <div>
@@ -80,9 +143,19 @@ export default function TableMonth(){
                                         </a>
                                     </div>
                                     <div style={{position: "relative",minHeight: "2em"}}>
-                                        <div style={{fontSize: "0.85em",padding: "2px 3px 0"}}>
-
-                                        </div>
+                                    {
+                                                    eventInDay.map((value,index)=>{
+                                                        return(
+                                                            <div style={{fontSize: "0.85em",padding: "2px 3px 0",width:"100%",backgroundColor:value.background }}>
+                                                            <a style={{marginLeft: "4px",marginBottom: "6px",borderRadius: "6px",width:"100%",overflow:"hidden",
+                                                                        borderColor: "rgb(198, 40, 40)" ,color:value.color}}>
+                                                                {value.startTime}:{value.title}
+                                                            </a>
+                                                            
+                                                            </div>
+                                                        )
+                                                        })
+                                                }
                                     </div>
                                 </div>
                             </Td>

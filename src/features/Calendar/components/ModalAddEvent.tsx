@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
     Button,
     ModalOverlay,
@@ -10,22 +9,21 @@ import {
 
 } from '@chakra-ui/react'
 
+
 import FormAdd from '../components/Form/FormAddEvent';
 import {Event} from '../../../models/Event';
 
-import { useAppSelector } from '../../../app/hooks';
-import {DayAddEvent} from '../CalendarSlice';
+import { useAppSelector,useAppDispatch } from '../../../app/hooks';
+import {DayAddEvent,CalendarActions} from '../CalendarSlice';
 export interface ModalProps{
     closeAddEvent?: ()=> void,
 }
 
 export default function ModalAddEvent({closeAddEvent}:ModalProps){
-
+    const dispatch = useAppDispatch();
     //
     const day = useAppSelector(DayAddEvent);
-
     //
-  
     const initalValues: Event = {
         title:"",
         detail:"",
@@ -36,7 +34,7 @@ export default function ModalAddEvent({closeAddEvent}:ModalProps){
         dayEvent:day,
     }  
     const handleFormSubmit = async (values: Event) => {
-        console.log("values:",values)
+        dispatch(CalendarActions.confirmAddEvent(values))
     };
     return(
         <>
