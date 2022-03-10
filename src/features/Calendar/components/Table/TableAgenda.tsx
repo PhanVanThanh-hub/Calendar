@@ -84,7 +84,7 @@ export default function  TableAgenda({month,event,dayEvent,monthEvent}:TableMont
     }
     
     //sắp xếp theo giờ
-    eventInWeek.list.sort(function(a,b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0);} );
+    eventInWeek.list.sort(function(a,b) {return (parseInt(a.startTime.split(":")[0]) > parseInt(b.startTime.split(":")[0])) ? 1 : ((parseInt(b.startTime.split(":")[0]) > parseInt(a.startTime.split(":")[0])) ? -1 : 0);} );
     
     eventInWeek.list.map((value)=>{
         const index= calendarA.list.findIndex(item=> item.day===value.dayEvent)
