@@ -46,6 +46,8 @@ export default function  TableAgenda({month,event,dayEvent,monthEvent}:TableMont
     const eventInWeek:EventProps={
         list:[]
     }
+
+    //lấy 7 ngày trong 1 tuần
     const days :any[]= [];
     for (var i = 0; i <= 6; i++) {
             days.push(moment(weekStart).add(i, 'days').format("DD"));
@@ -102,7 +104,6 @@ export default function  TableAgenda({month,event,dayEvent,monthEvent}:TableMont
     // sắp xếp theo ngày
     calendarA.list.sort(function(a,b) {return (a.day > b.day) ? 1 : ((b.day > a.day) ? -1 : 0);} );
 
-    console.log("hehe:",calendarA)
     calendarA.list.shift();
 
     return(

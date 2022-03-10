@@ -93,7 +93,8 @@ export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthP
      
     // eventOfDay.shift();
     
-
+    var dayNow = value.format('DD');
+    console.log("daynow:",dayNow)
     return(
         <> 
         <Table variant='simple' sx={{widthL:"913px"}}>
@@ -118,7 +119,7 @@ export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthP
                     <Tr key={index} >
                         {week.map((day,indexWeek)=>{
                             var monthNow =  value.format('MMMM');
-
+                            
                             var monthDay =  day.format('MMMM');
                            
                             const dayChoose = day.format("MMMM-DD-yyy")
@@ -131,6 +132,7 @@ export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthP
                                     eventInDay.list.push(value)
                                 }
                             })
+                            eventInDay.list.sort(function(a,b) {return (parseInt(a.startTime.split(":")[0]) > parseInt(b.startTime.split(":")[0])) ? 1 : ((parseInt(b.startTime.split(":")[0]) > parseInt(a.startTime.split(":")[0])) ? -1 : 0);} );
                             return(
                             <Td key={indexWeek} 
                                 sx={{ border: "1px solid #ddd",textAlign:"center",padding:"0px",height:"100px",}} 
@@ -139,7 +141,7 @@ export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthP
                                 
                             >
                                  
-                                <div style={{position: "relative",minHeight: "100%",opacity: monthDay===monthNow ? "1": "0.3"}}>
+                                <div style={{position: "relative",minHeight: "100%",opacity: monthDay===monthNow ? "1": "0.3",backgroundColor: dayNow===day.format("D").toString()? "rgba(102, 178, 240, 0.8)":""}}>
                                     <div onClick={()=>onClickDate(dayChoose)}>
                                         <a style={{textAlign: "center",marginTop: "12px",marginBottom: "12px",
                                                 position: "relative",zIndex: "4",padding: "4px"     
@@ -148,7 +150,7 @@ export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthP
                                             {day.format("D").toString()}
                                         </a>
                                     </div>
-                                    <div style={{position: "relative",minHeight: "2em"}}>
+                                    <div style={{position: "relative",minHeight: "2em" }}>
                                     {
                                         eventInDay.list.map((value,index)=>{
                                             return(
@@ -164,6 +166,9 @@ export default function TableMonth({month,event,dayEvent,monthEvent}:TableMonthP
                                             )
                                         })
                                     }
+                                    </div>
+                                    <div style={{minHeight:"2em"}}>
+
                                     </div>
                                 </div>
                             </Td>

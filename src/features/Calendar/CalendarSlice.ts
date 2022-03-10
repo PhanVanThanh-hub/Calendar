@@ -164,6 +164,7 @@ const CalendarSlice = createSlice({
         deleteEvent(state,action:PayloadAction<Event>){
             const index = state.detail.findIndex(item => item.id === action.payload.id)
             state.detail.splice(index, 1);
+            state.statusPreview=false
         },
         editEvent(state,action:PayloadAction<Event>){
             const index = state.detail.findIndex(item => item.id === action.payload.id)
