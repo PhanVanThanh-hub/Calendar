@@ -43,7 +43,7 @@ export default function ModalAddEvent({closeAddEvent}:ModalProps){
                 <ModalHeader sx={{textAlign:"center"}}>{day}</ModalHeader>
           
                 <ModalBody> 
-                    <FormAdd initalValues={initalValues} onSubmit={handleFormSubmit}/>
+                    <FormAdd title="Add Event" initalValues={initalValues} onSubmit={handleFormSubmit}/>
                 </ModalBody>
                 <ModalFooter>
                     <Button colorScheme='blue' mr={3} onClick={closeAddEvent}>

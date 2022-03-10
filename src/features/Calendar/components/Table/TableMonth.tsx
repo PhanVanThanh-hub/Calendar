@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React  from 'react';
 import {
     Table,
     Thead,
@@ -23,7 +23,7 @@ interface EventProps{
 export default function TableMonth(){
 
     const dispatch = useAppDispatch();
-    const [idMonth , setIdMonth] = useState([])
+ 
 
     //
     const month = useAppSelector(MonthChoose);
@@ -91,7 +91,6 @@ export default function TableMonth(){
      
     // eventOfDay.shift();
     
-    console.log("event :",eventOfDay)
 
     return(
         <> 

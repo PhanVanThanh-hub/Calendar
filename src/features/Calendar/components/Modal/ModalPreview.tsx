@@ -8,7 +8,6 @@ import {
     ModalBody,
 
 } from '@chakra-ui/react'
-import { Input } from '@chakra-ui/react'
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import FormAdd from '../Form/FormAddEvent';
@@ -34,8 +33,8 @@ export default function ModalPreviewEvent({closePreview,eventPreview}:ModalProps
         ...eventPreview
     }  
     const handleFormSubmit = async (values: Event) => {
-        // dispatch(CalendarActions.confirmAddEvent(values))
-        console.log("values:",values)
+        dispatch(CalendarActions.editEvent(values))
+        
     };
 
     const deleteEvent = ()=>{
@@ -47,9 +46,9 @@ export default function ModalPreviewEvent({closePreview,eventPreview}:ModalProps
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader sx={{textAlign:"center"}}>Edit</ModalHeader>
-                    <Input></Input>
+ 
                 <ModalBody> 
-                    <FormAdd initalValues={initalValues} onSubmit={handleFormSubmit}/>
+                    <FormAdd title="Edit" initalValues={initalValues} onSubmit={handleFormSubmit}/>
                 </ModalBody>
                 <ModalFooter>
                     <Button colorScheme='blue' mr={3} onClick={deleteEvent}>

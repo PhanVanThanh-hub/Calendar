@@ -14,11 +14,12 @@ import {RadioGroupField} from '../../../../components/FormField/RadioField';
 import {DateField} from '../../../../components/FormField/DateTimeField'; 
 
 export interface EventProps{
+    title:string,
     initalValues?:Event;
     onSubmit:(formValues: Event) => void;
 }
 
-export default function FormAdd({initalValues,onSubmit}:EventProps){
+export default function FormAdd({title,initalValues,onSubmit}:EventProps){
     const [error, setError] = useState<string>();
     const schema = yup
         .object({
@@ -110,7 +111,7 @@ export default function FormAdd({initalValues,onSubmit}:EventProps){
                 />
                 <div style={{justifyContent: "center",display: "flex",marginTop:"10px"}}>
                     <Button colorScheme='blue' mr={3} type="submit"    >
-                        Add Event
+                        {title}
                     </Button>
                 </div>
                  
