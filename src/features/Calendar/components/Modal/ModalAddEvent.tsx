@@ -10,11 +10,11 @@ import {
 } from '@chakra-ui/react'
 
 
-import FormAdd from '../components/Form/FormAddEvent';
-import {Event} from '../../../models/Event';
+import FormAdd from '../Form/FormAddEvent';
+import {Event} from '../../../../models/Event';
 
-import { useAppSelector,useAppDispatch } from '../../../app/hooks';
-import {DayAddEvent,CalendarActions} from '../CalendarSlice';
+import { useAppSelector,useAppDispatch } from '../../../../app/hooks';
+import {DayAddEvent,CalendarActions} from '../../CalendarSlice';
 export interface ModalProps{
     closeAddEvent?: ()=> void,
 }

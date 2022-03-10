@@ -15,10 +15,11 @@ import TableMonth from '../components/Table/TableMonth';
 import TableWeek from '../components/Table/TableWeek';
 import TableAgenda from '../components/Table/TableAgenda';
 
-import ModalAddEvent from '../components/ModalAddEvent';
+import ModalAddEvent from '../components/Modal/ModalAddEvent';
+import ModalPreviewEvent from '../components/Modal/ModalPreview';
 
 import { useAppSelector,useAppDispatch } from '../../../app/hooks';
-import {TableChoose,AddEvent,CalendarActions} from '../CalendarSlice';
+import {TableChoose,AddEvent,CalendarActions,StatusPreview,EventPreview} from '../CalendarSlice';
  
 export default function CalendarPage(){
     
@@ -26,11 +27,19 @@ export default function CalendarPage(){
 
     //
     const table = useAppSelector(TableChoose);
-    const open = useAppSelector(AddEvent)
+    const open = useAppSelector(AddEvent);
+    const openPreview = useAppSelector(StatusPreview);
+    const eventPreview = useAppSelector(EventPreview);
 
     //
     const closeAddEvent =():void=>{
+
         dispatch(CalendarActions.statusAddEvent(false))
+    }
+
+    const closePreview =():void=>{
+
+        dispatch(CalendarActions.statusPreviewEvent(false))
     }
 
     return(
@@ -61,6 +70,9 @@ export default function CalendarPage(){
             <Modal isOpen={open} onClose={closeAddEvent}>
                 
                 <ModalAddEvent closeAddEvent={closeAddEvent}/>
+            </Modal>
+            <Modal isOpen={openPreview} onClose={closePreview}>
+                <ModalPreviewEvent closePreview={closePreview} eventPreview={eventPreview}/>
             </Modal>
        
         </>

@@ -1,13 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
 import { Event,Month,Day} from '../../models/Event';
-import moment from 'moment';
 
-interface monthProps{
-    month:string,
-    id:[]
-}
-
+ 
 interface InviteeState {
     monthNow:number,
     table:number,
@@ -16,9 +11,11 @@ interface InviteeState {
         day:string,
          
     },
+    statusPreview:boolean,
     detail:Event[],
     month:Month[],
     day:Day[],
+    preview:Event,
   
 }
  
@@ -29,6 +26,7 @@ var initialState :InviteeState={
         status:false,
         day:"",
     },
+    statusPreview:false,
     detail:[
         {
             title:"",
@@ -51,6 +49,15 @@ var initialState :InviteeState={
         listId:[]
         }
     ],
+    preview:{
+        title:"",
+        detail:"",
+        background:"",
+        color:"",
+        dayEvent:"",
+        startTime:"",
+        endTime:"",
+    }
 
     
    
@@ -106,8 +113,6 @@ const CalendarSlice = createSlice({
                  
                 //check xem day co id nằm trong month.id hay chưa,nếu chưa thì thêm idday vào list id của month và tạo 
                 //1 day mới 
-
-                
                 var right=0; //Có rồi thì return 0 ,chưa thì return 1
                 var whatDay=-1;//Kiểm tra xem đó đó là ngày bao nhiêu
                 state.month[index].id.map((value,index)=>{
@@ -147,7 +152,20 @@ const CalendarSlice = createSlice({
             //Tạo event
             action.payload["id"]=idEvent 
             state.detail.push(action.payload)
+            state.addEvent.status=false
+        },
+        statusPreviewEvent(state , action:PayloadAction<boolean>){
+            state.statusPreview = action.payload
+        },
+        EventPreview(state,action:PayloadAction<Event>){
+            state.preview=action.payload
+            
+        },
+        deleteEvent(state,action:PayloadAction<Event>){
+            const index = state.detail.findIndex(item => item.id === action.payload.id)
+            state.detail.splice(index, 1);
         }
+        
 
 
          
@@ -164,6 +182,9 @@ export const DayAddEvent = (state: RootState) => state.calendar.addEvent.day;
 export const DayEvent = (state: RootState) => state.calendar.detail;
 export const ListDayEvent = (state: RootState) => state.calendar.day;
 export const ListMonthEvent = (state: RootState) => state.calendar.month;
+export const StatusPreview = (state: RootState) => state.calendar.statusPreview;
+export const EventPreview = (state: RootState) => state.calendar.preview;
+
 //reducer
 const CalendarReducer = CalendarSlice.reducer
 export default CalendarReducer

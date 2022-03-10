@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {
     Table,
     Thead,
@@ -7,18 +7,23 @@ import {
     Th,
     Td,
   } from '@chakra-ui/react';
+ 
 import moment from 'moment';
 
+import {Event} from '../../../../models/Event'; 
 
 import {useAppDispatch, useAppSelector } from '../../../../app/hooks';
 
 import {MonthChoose,CalendarActions,DayEvent,ListDayEvent,ListMonthEvent} from '../../CalendarSlice';
 
- 
+interface EventProps{
+    list:Event[]
+}
 
 export default function TableMonth(){
 
     const dispatch = useAppDispatch();
+    const [idMonth , setIdMonth] = useState([])
 
     //
     const month = useAppSelector(MonthChoose);
@@ -44,11 +49,15 @@ export default function TableMonth(){
     }
 
     //Function
-    const onClickDate=({dayChoose}:any)=>{
+    const onClickDate=(dayChoose:string)=>{
         dispatch(CalendarActions.statusAddEvent(true))
         dispatch(CalendarActions.dayAddEvent(dayChoose))
     }
     
+    const openPreview=(values:Event):void=>{
+        dispatch(CalendarActions.statusPreviewEvent(true))
+        dispatch(CalendarActions.EventPreview(values))
+    }
  
     
     const eventOfMonth =[""]
@@ -56,7 +65,9 @@ export default function TableMonth(){
 
     //lấy object month đang hiển thị
     const index = monthEvent.findIndex(item=>item.month===monthDisplay)
+    
     if(index>=0){
+        
         //Lấy id các ngày có event trong tháng
         monthEvent[index].id.map((value,index)=>{
             const index1 = dayEvent.findIndex(item=>item.id===value)
@@ -66,28 +77,24 @@ export default function TableMonth(){
         })
     }
  
-    const eventOfDay = [{
-        background: "",
-        color: "",
-        dayEvent: "",
-        detail: "",
-        endTime: "",
-        startTime: "",
-        title: "",
-    }]
-
+    const eventOfDay:EventProps={
+        list:[]
+    }
+ 
     //Lấy  sự kiện diễn ra trong tháng
     eventOfMonth.map((value,index)=>{
         const index2=  event.findIndex(item=>item.id===value)
         if(index2>=0){
-            eventOfDay.push(event[index2])
+            eventOfDay.list.push(event[index2])
         }
     })
      
-    eventOfDay.shift();
- 
+    // eventOfDay.shift();
+    
+    console.log("event :",eventOfDay)
 
     return(
+        <> 
         <Table variant='simple' sx={{widthL:"913px"}}>
             
             <Thead>
@@ -114,27 +121,25 @@ export default function TableMonth(){
                             var monthDay =  day.format('MMMM');
                            
                             const dayChoose = day.format("MMMM-DD-yyy")
-                            const eventInDay=[{
-                                background: "",
-                                color: "",
-                                dayEvent: "",
-                                detail: "",
-                                endTime: "",
-                                startTime: "",
-                                title: "",
-                            }];
-                            eventOfDay.map((value,index)=>{
+                             
+                            const eventInDay:EventProps={
+                                list:[]
+                            }
+                            eventOfDay.list.map((value,index)=>{
                                 if(value.dayEvent===dayChoose){
-                                    eventInDay.push(value)
+                                    eventInDay.list.push(value)
                                 }
                             })
-                            
-                            eventInDay.shift();
                             return(
-                            <Td key={indexWeek} sx={{ border: "1px solid #ddd",textAlign:"center",padding:"0px",height:"100px",}} onClick={()=>onClickDate({dayChoose})}>
+                            <Td key={indexWeek} 
+                                sx={{ border: "1px solid #ddd",textAlign:"center",padding:"0px",height:"100px",}} 
+                                // onClick={()=>onClickDate(dayChoose)}
+                              
+                                
+                            >
                                  
                                 <div style={{position: "relative",minHeight: "100%",opacity: monthDay===monthNow ? "1": "0.3"}}>
-                                    <div>
+                                    <div onClick={()=>onClickDate(dayChoose)}>
                                         <a style={{textAlign: "center",marginTop: "12px",marginBottom: "12px",
                                                 position: "relative",zIndex: "4",padding: "4px"     
                                             }}
@@ -144,18 +149,20 @@ export default function TableMonth(){
                                     </div>
                                     <div style={{position: "relative",minHeight: "2em"}}>
                                     {
-                                                    eventInDay.map((value,index)=>{
-                                                        return(
-                                                            <div style={{fontSize: "0.85em",padding: "2px 3px 0",width:"100%",backgroundColor:value.background }}>
-                                                            <a style={{marginLeft: "4px",marginBottom: "6px",borderRadius: "6px",width:"100%",overflow:"hidden",
-                                                                        borderColor: "rgb(198, 40, 40)" ,color:value.color}}>
-                                                                {value.startTime}:{value.title}
-                                                            </a>
-                                                            
-                                                            </div>
-                                                        )
-                                                        })
-                                                }
+                                        eventInDay.list.map((value,index)=>{
+                                            return(
+                                                <div  key={index}
+                                                    style={{fontSize: "0.85em",padding: "2px 3px 0",width:"100%",backgroundColor:value.background }}
+                                                    onClick={()=>openPreview(value)}
+                                                >
+                                                    <a style={{marginLeft: "4px",marginBottom: "6px",borderRadius: "6px",width:"100%",overflow:"hidden",
+                                                        borderColor: "rgb(198, 40, 40)" ,color:value.color}}>
+                                                        {value.startTime}:{value.title}
+                                                    </a>
+                                                </div>
+                                            )
+                                        })
+                                    }
                                     </div>
                                 </div>
                             </Td>
@@ -167,5 +174,7 @@ export default function TableMonth(){
             </Tbody>
             
         </Table>
+         
+        </>
     )
 }
